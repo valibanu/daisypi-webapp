@@ -7,4 +7,5 @@ SQLAlchemy==0.8.2
 Werkzeug==0.9.3
 honcho==0.4.2
 itsdangerous==0.22
+requests==1.2.3
 wsgiref==0.1.2
