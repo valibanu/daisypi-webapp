@@ -11,7 +11,8 @@ import data.update_one_table
 DEBUG = os.environ.get('DEBUG') == 'on'
 PORT = int(os.environ.get('PORT', 5000))
 HOST = '127.0.0.1' if DEBUG else '0.0.0.0'
-
+if DEBUG and os.environ.get('DEBUG_IN_PRODUCTION') == 'on':
+    HOST = '0.0.0.0'
 
 app = flask.Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL',
