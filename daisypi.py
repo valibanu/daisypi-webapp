@@ -1,4 +1,6 @@
 import os
+import json
+
 import flask
 
 import data
@@ -47,14 +49,24 @@ def show_feed():
     return flask.render_template('index.html', entries=entries)
 
 
-# @app.route('/get_feed', methods=['GET']):
-# def get_feed():
-#     response = {}
-#     if 'feed_id' in flask.request.args:
-#         feed_id = int(flask.request.args.get('feed_id'))
-#         entries = data.one_table.Reading.query.filter_by(
-#             feed_id=feed_id).limit(50)
-#     return json.dumps(response)
+@app.route('/get_feed', methods=['GET'])
+def get_feed():
+    response = {'status': 'OK'}
+    if 'feed_id' in flask.request.args:
+        str_feed_id = flask.request.args.get('feed_id')
+        try:
+            feed_id = int(str_feed_id)
+        except ValueError:
+            response['status'] = 'ERR: Invalid Feed ' + str_feed_id
+        else:
+            entries = data.one_table.Reading.query.filter_by(
+                feed_id=feed_id).limit(50)
+            pairs = []
+            for entry in entries:
+                pairs.append({'timestamp': entry.timestamp,
+                    'value': entry.value})
+            response['pairs'] = pairs
+    return json.dumps(response)
 
 
 if __name__ == '__main__':
