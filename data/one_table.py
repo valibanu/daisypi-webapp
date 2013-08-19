@@ -6,7 +6,7 @@ from . import DB
 
 
 class Reading(DB.Model):
-    '''Model an arbitrary sensos reading.'''
+    '''Model an arbitrary sensor reading.'''
     feed_id = DB.Column(DB.Integer, primary_key=True)
     timestamp = DB.Column(DB.DateTime, primary_key=True)
     value = DB.Column(DB.Integer)
@@ -19,5 +19,5 @@ class Reading(DB.Model):
         self.timestamp = timestamp
 
     def __repr__(self):
-        return '<Reading entry ({0} , {1} , {2})>'.format(
+        return 'feed={0} ({1} , value={2})'.format(
             self.feed_id, self.timestamp.strftime('%c'), self.value)

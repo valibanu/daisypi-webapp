@@ -21,23 +21,25 @@ with app.app_context():
     data.DB.create_all()
 
 
-@app.route('/hello')
-def hello_world():
-    return flask.render_template('hello_world.html')
-
 @app.route('/')
 def index():
-    entries = data.one_table.Reading.query.all()
-    for entry in entries:
-        print('Printing ' + str(entry))
-    return flask.render_template('index.html',
-        entries=entries)
+    return flask.render_template('hello_world.html')
+
 
 @app.route('/update', methods=['POST'])
 def update():
-    # print(flask.request)
     data.update_one_table.update(flask.request.json)
     return 'OK!'
+
+
+@app.route('/show', methods=['GET'])
+def show_feed():
+    if 'feed_id' in flask.request.args:
+        feed_id = int(flask.request.args.get('feed_id'))
+        entries = data.one_table.Reading.query.filter_by(feed_id=feed_id)
+    else:
+        entries = data.one_table.Reading.query.all()
+    return flask.render_template('index.html', entries=entries)
 
 
 if __name__ == '__main__':
