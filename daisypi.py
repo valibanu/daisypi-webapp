@@ -64,7 +64,7 @@ def get_feed():
                 feed_id=feed_id).limit(50)
             pairs = []
             for entry in entries:
-                pairs.append({'timestamp': entry.timestamp,
+                pairs.append({'timestamp': entry.timestamp.isoformat(),
                     'value': entry.value})
             response['pairs'] = pairs
     return json.dumps(response)
