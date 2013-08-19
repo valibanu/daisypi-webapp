@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+    </head>
+
+    <body>
+        {% set index = 1 %}
+        {% for feed_id in feed_ids %}
+            <h2>Feed {{ feed_id }}</h2>
+            <div id="graph{{ index }}" style="height: 320px; width: 1000px"></div>
+
+            <script>
+                function drawGraph(pairs) {
+                    new Morris.Line({
+                      // ID of the element in which to draw the chart.
+                      element: 'graph{{ index }}',
+                      // Chart data records -- each entry in this array corresponds to a point on
+                      // the chart.
+                      data: pairs,
+                      /*
+                      data: [
+                        { year: '2008', value: 20 },
+                        { year: '2009', value: 10 },
+                        { year: '2010', value: 5 },
+                        { year: '2011', value: 5 },
+                        { year: '2012', value: 20 }
+                      ],
+                      */
+                      // The name of the data record attribute that contains x-values.
+                      xkey: 'timestamp',
+                      // A list of names of data record attributes that contain y-values.
+                      ykeys: ['value'],
+                      // Labels for the ykeys -- will be displayed when you hover over the
+                      // chart.
+                      labels: ['Value'],
+                      smooth: false
+                      });
+                }
+
+                $.get('get_feed', {feed_id: {{ feed_id }}}, function(data) {
+                    var obj = eval(data);
+                    console.log(obj);
+                    drawGraph(obj.pairs);
+                },
+                "json");
+
+
+            </script>
+            {% set index = index +1 %}
+        {% endfor %}
+    </body>
+</html>

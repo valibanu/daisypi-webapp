@@ -61,13 +61,28 @@ def get_feed():
             response['status'] = 'ERR: Invalid Feed ' + str_feed_id
         else:
             entries = data.one_table.Reading.query.filter_by(
-                feed_id=feed_id).limit(50)
+                feed_id=feed_id).limit(100)
             pairs = []
             for entry in entries:
                 pairs.append({'timestamp': entry.timestamp.isoformat(),
                     'value': entry.value})
             response['pairs'] = pairs
     return json.dumps(response)
+
+
+@app.route('/show_graph', methods=['GET'])
+def show_graph():
+    if 'feed_id' in flask.request.args:
+        str_feed_id = flask.request.args.get('feed_id')
+        try:
+            feed_id = int(str_feed_id)
+        except ValueError:
+            return flask.render_template('index.html',
+                error='Invalid Feed ' + str_feed_id)
+        return flask.render_template('graph.html', feed_ids=[feed_id]);
+    else:
+        return flask.render_template('graph.html', feed_ids=list(data.FEED_IDS));
+        # return flask.redirect(flask.url_for('get_feed'));
 
 
 if __name__ == '__main__':
