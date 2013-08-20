@@ -2,6 +2,7 @@ import os
 import json
 
 import flask
+from sqlalchemy import desc
 
 import data
 import data.one_table
@@ -61,7 +62,7 @@ def get_feed():
             response['status'] = 'ERR: Invalid Feed ' + str_feed_id
         else:
             entries = data.one_table.Reading.query.filter_by(
-                feed_id=feed_id).limit(100)
+                feed_id=feed_id).order_by(desc(data.one_table.Reading.timestamp)).limit(100).all()
             pairs = []
             for entry in entries:
                 pairs.append({'timestamp': entry.timestamp.isoformat(),
