@@ -62,7 +62,8 @@ def get_feed():
             response['status'] = 'ERR: Invalid Feed ' + str_feed_id
         else:
             entries = data.one_table.Reading.query.filter_by(
-                feed_id=feed_id).order_by(desc(data.one_table.Reading.timestamp)).limit(100).all()
+                feed_id=feed_id).order_by(
+                desc(data.one_table.Reading.timestamp)).limit(100).all()
             pairs = []
             for entry in entries:
                 pairs.append({'timestamp': entry.timestamp.isoformat(),
@@ -82,6 +83,7 @@ def show_graph():
                 error='Invalid Feed ' + str_feed_id)
         return flask.render_template('graph.html', feed_ids=[feed_id]);
     else:
+        #TODO: replace data.FEED_IDS with a query
         return flask.render_template('graph.html', feed_ids=list(data.FEED_IDS));
         # return flask.redirect(flask.url_for('get_feed'));
 
